@@ -1,0 +1,46 @@
+vim-csharp.txt Some commands like in resharper and syntax formating   vim-csharp
+
+CONTENTS
+
+ 1. Introduction            |vim-csharp-intro|
+ 2. Syntax                  |vim-csharp-syntax|
+ 3. Commands                |vim-csharp-commands|
+
+INTRODUCTION                vim-csharp-intro
+
+Bla-bla-bla
+
+SYNTAX                      vim-csharp-syntax
+
+1. Tabs and Indentation
+
+Default values set in file ftplugin/cs and have follow values
+  set tabstop=4
+  set shiftwidth=4
+  set softtabstop=4
+  set noexpandtab
+  set autoindent
+
+
+COMMANDS                    vim-csharp-commands
+
+1. Block wrap
+
+Command name is CS_WrapBlock, default shortcut is <S-C-J>.
+Wrap block of code with brace and shift block to right with one shiftwidth step.
+Example:
+
+someObject.DoSomthing();
+otheOneObject.DoSomthingToo();
+
+|
+V
+
+{
+  someObject.DoSomthing();
+  otheOneObject.DoSomthingToo();
+}
+
+
+
+
