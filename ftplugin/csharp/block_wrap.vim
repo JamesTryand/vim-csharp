@@ -16,7 +16,7 @@ function! s:BlockWrap(line1, line2, type)
   call append(a:line2+1, ind2)
 endfunction
 
-command! -nargs=0 -range CS_WrapBlock call s:BlockWrap(<line1>, <line2>, "")
-vmap <S-C-J> :CS_WrapBlock<cr>
+command! -nargs=0 -range CSWrapBlock call s:BlockWrap(<line1>, <line2>, "")
+vmap <S-C-J> :CSWrapBlock<cr>
 
 

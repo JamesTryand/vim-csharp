@@ -26,7 +26,7 @@ COMMANDS                    vim-csharp-commands
 
 1. Block wrap
 
-Command name is CS_WrapBlock, default shortcut is <S-C-J>.
+Command name is CSWrapBlock, default shortcut is <S-C-J>.
 Wrap block of code with brace and shift block to right with one shiftwidth step.
 Example:
 
