@@ -1,160 +1,147 @@
 " Vim syntax file
 " Language:	C#
-" Maintainer:	Anduin Withers <awithers@anduin.com>
-" Former Maintainer:	Johannes Zellner <johannes@zellner.org>
-" Last Change:	Fri Aug 14 13:56:37 PDT 2009
-" Filenames:	*.cs
-" $Id: cs.vim,v 1.4 2006/05/03 21:20:02 vimboss Exp $
-"
-" REFERENCES:
-" [1] ECMA TC39: C# Language Specification (WD13Oct01.doc)
+" Maintainer:	Heath Stewart <clubstew@hotmail.com>
+" Last change:	2002-07-16
 
-if exists("b:current_syntax")
+" Notice: folding has been added for #region...#endregion regions
+
+" For version 5.x: Clear all syntax items
+" For version 6.x: Quit when a syntax file was already loaded
+if version < 600
+    syntax clear
+elseif exists("b:current_syntax")
     finish
 endif
 
-let s:cs_cpo_save = &cpo
-set cpo&vim
+syn match csharpError "[\\`]"
+syn match csharpError "<<<\|\.\.\|=>\|<>\|||=\|&&=\|[^-]->\|\*\/"
+syn keyword csharpConditional 	if else switch case default
+syn keyword csharpRepeat	while for foreach do goto in
+syn keyword csharpBoolean	true false
+syn keyword csharpConst		null
+syn keyword csharpTypedef	this base
+syn match csharpOperator "{\|}\|\[\|\]\|(\|)\|-\|--\|+\|++\|=\|==\|!=\|<\|<=\|<<\|<<<\|>>\|>>>\|>=\|>\|&\|&&\|&=\|||\||\||=\|\\\|\\=\|\*\|\*=\|->\|%\|%=\|;\|,\|\.\|+=\|-="
+syn keyword csharpDirectional	out ref
+syn keyword csharpType		bool byte char decimal double enum float int long sbyte short sizeof string uint ulong ushort void
+syn keyword csharpStatement	return  internal typeof lock new operator object
+syn keyword csharpClass		class interface namespace struct override
+syn keyword csharpProperties	get set add remove
+syn keyword csharpException	try catch throw finally
+syn keyword csharpScope		public private protected abstract
+syn keyword csharpBranch          break continue nextgroup=csharpUserLabelRef skipwhite
+syn match   csharpUserLabelRef    "\k\+" contained
+syn keyword csharpTypecast	as is
+syn keyword csharpTypeConvertDecl	explicit implicit
+syn keyword csharpStorageClass	static const delegate event extern fixed checked  unchecked sealed stackalloc virtual readonly unsafe params
+syn keyword csharpExternal	namespace using
+syn keyword csharpPreproc	#if #else #elif #endif #define #undef #warning #error #line #region #endregion
 
+syn keyword csharpSystemClass   AccessException Activator AppDomain AppDomainFlags AppDomainUnloadedException AppDomainUnloadInProgressException ApplicationException ArgumentException ArgumentNullException ArgumentOutOfRangeException ArithmeticException Array
+syn keyword csharpSystemClass   ArrayTypeMismatchException Attribute AttributeUsageAttribute BadImageFormatException BitConverter Buffer CallContext CLSCompliantAttribute Console ContextBoundObject ContextMarshalException ContextStaticAttribute   Convert
+syn keyword csharpSystemClass  CoreException DBNull Delegate DivideByZeroException DuplicateWaitObjectException Empty EntryPointNotFoundException Enum Environment EventArgs Exception ExecutionEngineException FieldAccessException FlagsAttribute Bitfeilds
+syn keyword csharpSystemClass FormatException IndexOutOfRangeException InvalidCastException InvalidOperationException LocalDataStore LocalDataStoreMgr LocalDataStoreSlot LogicalCallContext MarshalByRefObject Math MethodAccessException MissingFieldException
+syn keyword csharpSystemClass MissingMemberException MissingMethodException MulticastDelegate MulticastNotSupportedException NonSerializedAttribute NotFiniteNumberException NotImplementedException NotSupportedException NullReferenceException Object ObsoleteAttribute
+syn keyword csharpSystemClass OperatingSystem OutOfMemoryException OverflowException ParamArrayAttribute Radix Random RankException SerializableAttribute StackOverflowException String SystemException ThreadStaticAttribute TimeZone Type TypeInitializationException
+syn keyword csharpSystemClass TypeLoadException TypeUnloadedException UnhandledExceptionEvent Value ValueType Version WeakReference WeakReferenceException
 
-" type
-syn keyword csType			bool byte char decimal double float int long object sbyte short string uint ulong ushort void
-" storage
-syn keyword csStorage			class delegate enum interface namespace struct
-" repeat / condition / label
-syn keyword csRepeat			break continue do for foreach goto return while
-syn keyword csConditional		else if switch
-syn keyword csLabel			case default
-" there's no :: operator in C#
-syn match csOperatorError		display +::+
-" user labels (see [1] 8.6 Statements)
-syn match   csLabel			display +^\s*\I\i*\s*:\([^:]\)\@=+
-" modifier
-syn keyword csModifier			abstract const extern override readonly sealed static virtual volatile
-syn keyword csScope                     internal public private protected
-" constant
-syn keyword csConstant			false null true
-" exception
-syn keyword csException			try catch finally throw
+syn keyword csharpSystemInterface IAsyncResult   ICloneable IComparable IConvertible ICustomFormatter IFormattable ILogicalThreadAffinative IServiceObjectProvider
+syn keyword csharpSystemValueType  ArgIterator Boolean Byte Char Currency DateTime Decimal Double Guid Int16 Int32 Int64 ParamArray RuntimeArgumentHandle RuntimeFieldHandle RuntimeMethodHandle RuntimeTypeHandle SByte Single TimeSpan TypedReference UInt16 UInt32 UInt64 Void
 
-" TODO:
-syn keyword csUnspecifiedStatement	as base checked event fixed in is lock new operator out params ref sizeof stackalloc this typeof unchecked unsafe using var
-" TODO:
-syn keyword csUnsupportedStatement	add remove value
-" TODO:
-syn keyword csUnspecifiedKeyword	explicit implicit
+syn keyword csharpSystemDelegate  AsyncCallback EventHandler UnhandledExceptionEventHandler
+syn keyword csharpSystemEnum 	AttributeTargets PlatformID TypeCode
 
+syn match   csharpStrPlhldr        contained +{\d\+\(,[+-]\?\d\+\)\?\(:[^}]\+\)\?}+
+syn match   csharpStrNoPlhldr      contained +{{\|}}+
+syn match   csharpSpecialError     contained "\\."
+syn match   csharpSpecialCharError contained "[^']"
+syn match   csharpSpecialChar      contained "\\\([4-9]\d\|[0-3]\d\d\|[\"\\'ntbrf]\|u\x\{4\}\)"
+syn region   csharpString          start=+"+ end=+"+ end=+$+ contains=csharpSpecialChar,csharpSpecialError,@Spell,csharpStrNoPlhldr,csharpStrPlhldr matchgroup=csharpStrPlhldr
+syn match   csharpVerbatimSpec     +@"+he=s+1 contained
+syn region  csharpVerbatimString   start=+@"+ end=+"+ skip=+""+ contains=csharpVerbatimSpec,@Spell,csharpStrPlhldr,csharpStrNoPlhldr matchgroup=csharpStrPlhldr
+syn match   csharpStringError      +"\([^"\\]\|\\.\)*$+
+syn match   csharpCharacter        "'[^']*'" contains=csharpSpecialChar,csharpSpecialCharError
+syn match   csharpCharacter        "'\\''" contains=csharpSpecialChar
+syn match   csharpCharacter        "'[^\\]'"
+syn match   csharpNumber           "\<\(0[0-7]*\|0[xX]\x\+\|\d\+\)[lL]\=\>"
+syn match   csharpNumber           "\(\<\d\+\.\d*\|\.\d\+\)\([eE][-+]\=\d\+\)\=[fFdD]\="
+syn match   csharpNumber           "\<\d\+[eE][-+]\=\d\+[fFdD]\=\>"
+syn match   csharpNumber           "\<\d\+\([eE][-+]\=\d\+\)\=[fFdD]\>"
 
-" Contextual Keywords
-syn match csContextualStatement	/\<yield[[:space:]\n]\+\(return\|break\)/me=s+5
-syn match csContextualStatement	/\<partial[[:space:]\n]\+\(class\|struct\|interface\)/me=s+7
-syn match csContextualStatement	/\<\(get\|set\)\([[:space:]\n]*{\|;\)/me=s+3
-syn match csContextualStatement	/\<where\>[^:]\+:/me=s+5
+" unicode characters
+syn match   csharpSpecial "\\u\d\{4\}"
+
+syn cluster csharpTop add=csharpString,csharpCharacter,csharpNumber,csharpSpecial,csharpStringError
 
 " Comments
-"
-" PROVIDES: @csCommentHook
-"
-" TODO: include strings ?
-"
-syn keyword csTodo		contained TODO FIXME XXX NOTE
-syn region  csComment		start="/\*"  end="\*/" contains=@csCommentHook,csTodo,@Spell
-syn match   csComment		"//.*$" contains=@csCommentHook,csTodo,@Spell
+syn keyword csharpTodo             contained TODO FIXME XXX
+syn region  csharpCommentString    contained start=+"+ end=+"+ end=+$+ end=+\*/+me=s-1,he=s-1 contains=csharpSpecial,csharpCommentStar,csharpSpecialChar,@Spell
+syn region  csharpComment2String   contained start=+"+  end=+$\|"+  contains=csharpSpecial,csharpSpecialChar,@Spell
+syn match   csharpCommentCharacter contained "'\\[^']\{1,6\}'" contains=csharpSpecialChar
+syn match   csharpCommentCharacter contained "'\\''" contains=csharpSpecialChar
+syn match   csharpCommentCharacter contained "'[^\\]'"
+syn region  csharpComment          start="/\*"  end="\*/" contains=csharpCommentString,csharpCommentCharacter,csharpNumber,csharpTodo,@Spell
+syn match   csharpCommentStar      contained "^\s*\*[^/]"me=e-1
+syn match   csharpCommentStar      contained "^\s*\*$"
+syn match   csharpLineComment      "//.*" contains=csharpComment2String,csharpCommentCharacter,csharpNumber,csharpTodo,@Spell
 
-" xml markup inside '///' comments
-syn cluster xmlRegionHook	add=csXmlCommentLeader
-syn cluster xmlCdataHook	add=csXmlCommentLeader
-syn cluster xmlStartTagHook	add=csXmlCommentLeader
-syn keyword csXmlTag		contained Libraries Packages Types Excluded ExcludedTypeName ExcludedLibraryName
-syn keyword csXmlTag		contained ExcludedBucketName TypeExcluded Type TypeKind TypeSignature AssemblyInfo
-syn keyword csXmlTag		contained AssemblyName AssemblyPublicKey AssemblyVersion AssemblyCulture Base
-syn keyword csXmlTag		contained BaseTypeName Interfaces Interface InterfaceName Attributes Attribute
-syn keyword csXmlTag		contained AttributeName Members Member MemberSignature MemberType MemberValue
-syn keyword csXmlTag		contained ReturnValue ReturnType Parameters Parameter MemberOfPackage
-syn keyword csXmlTag		contained ThreadingSafetyStatement Docs devdoc example overload remarks returns summary
-syn keyword csXmlTag		contained threadsafe value internalonly nodoc exception param permission platnote
-syn keyword csXmlTag		contained seealso b c i pre sub sup block code note paramref see subscript superscript
-syn keyword csXmlTag		contained list listheader item term description altcompliant altmember
+" Folding
+function! CSharpFoldText(add)
+	let line = getline(v:foldstart + a:add)
+	let sub = substitute(line, '#region\s', '', 'i')
+	let ts = &tabstop
+	let text = ""
+	while (l:ts > 0)
+		let text = text . v:folddashes[0]
+		let ts = ts - 1
+	endwhile
+	return substitute(sub, "\t", text, "g")
+endfunction
 
-syn cluster xmlTagHook add=csXmlTag
+syn region csharpRegionFold start="#region" end="#endregion" transparent fold
+syn sync fromstart
+set foldmethod=syntax foldcolumn=2 foldtext=CSharpFoldText(0)
 
-syn match   csXmlCommentLeader	+\/\/\/+    contained
-syn match   csXmlComment	+\/\/\/.*$+ contains=csXmlCommentLeader,@csXml,@Spell
-syntax include @csXml syntax/xml.vim
-hi def link xmlRegion Comment
+hi link csharpCommentString csharpString
+hi link csharpComment2String csharpString
+hi link csharpCommentCharacter csharpCharacter
 
-
-" [1] 9.5 Pre-processing directives
-syn region	csPreCondit
-    \ start="^\s*#\s*\(define\|undef\|if\|elif\|else\|endif\|line\|error\|warning\)"
-    \ skip="\\$" end="$" contains=csComment keepend
-syn region	csRegion matchgroup=csPreCondit start="^\s*#\s*region.*$"
-    \ end="^\s*#\s*endregion" transparent fold contains=TOP
-
-
-syn match csOperator "{\|}\|\[\|\]\|(\|)\|-\|--\|+\|++\|=\|==\|!=\|<\|<=\|<<\|<<<\|>>\|>>>\|>=\|>\|&\|&&\|&=\|||\||\||=\|\\\|\\=\|\*\|\*=\|->\|%\|%=\|;\|,\|\.\|+=\|-="
-
-" Strings and constants
-syn match   csSpecialError	contained "\\."
-syn match   csSpecialCharError	contained "[^']"
-" [1] 9.4.4.4 Character literals
-syn match   csSpecialChar	contained +\\["\\'0abfnrtvx]+
-" unicode characters
-syn match   csUnicodeNumber	+\\\(u\x\{4}\|U\x\{8}\)+ contained contains=csUnicodeSpecifier
-syn match   csUnicodeSpecifier	+\\[uU]+ contained
-syn region  csVerbatimString	start=+@"+ end=+"+ skip=+""+ contains=csVerbatimSpec,@Spell,csStringNoPlhldr,csStringPlhldr matchgroup=csStringPlhldr
-syn match   csVerbatimSpec	+@"+he=s+1 contained
-syn match   csStringPlhldr      contained +{\d\+\(,[+-]\?\d\+\)\?\(:[^}]\+\)\?}+
-syn match   csStringNoPlhldr    contained +{{\|}}+
-syn region  csString		start=+"+  end=+"+ end=+$+ contains=csSpecialChar,csSpecialError,csUnicodeNumber,@Spell,csStringPlhldr,csStringNoPlhldr matchgroup=csStringPlhldr
-syn match   csCharacter		"'[^']*'" contains=csSpecialChar,csSpecialCharError
-syn match   csCharacter		"'\\''" contains=csSpecialChar
-syn match   csCharacter		"'[^\\]'"
-syn match   csNumber		"\<\(0[0-7]*\|0[xX]\x\+\|\d\+\)[lL]\=\>"
-syn match   csNumber		"\(\<\d\+\.\d*\|\.\d\+\)\([eE][-+]\=\d\+\)\=[fFdD]\="
-syn match   csNumber		"\<\d\+[eE][-+]\=\d\+[fFdD]\=\>"
-syn match   csNumber		"\<\d\+\([eE][-+]\=\d\+\)\=[fFdD]\>"
-
-" The default highlighting.
-hi def link csType			Type
-hi def link csStorage			StorageClass
-hi def link csRepeat			Repeat
-hi def link csConditional		Conditional
-hi def link csLabel			Label
-hi def link csModifier			StorageClass
-hi def link csScope                     Statement
-hi def link csConstant			Constant
-hi def link csException			Exception
-hi def link csUnspecifiedStatement	Statement
-hi def link csUnsupportedStatement	Statement
-hi def link csUnspecifiedKeyword	Keyword
-hi def link csContextualStatement	Statement
-hi def link csOperatorError		Error
-hi def link csOperator                  Operator
-hi def link csTodo			Todo
-hi def link csComment			Comment
-
-hi def link csSpecialError		Error
-hi def link csSpecialCharError		Error
-hi def link csString			String
-hi def link csStringPlhldr              Operator
-hi def link csVerbatimString		String
-hi def link csVerbatimSpec		SpecialChar
-hi def link csPreCondit			PreCondit
-hi def link csCharacter			Character
-hi def link csSpecialChar		SpecialChar
-hi def link csNumber			Number
-hi def link csUnicodeNumber		SpecialChar
-hi def link csUnicodeSpecifier		SpecialChar
-
-" xml markup
-hi def link csXmlCommentLeader		Comment
-hi def link csXmlComment		Comment
-hi def link csXmlTag			Statement
-
-let b:current_syntax = "cs"
-
-let &cpo = s:cs_cpo_save
-unlet s:cs_cpo_save
-
-" vim: ts=8
+if !exists("did_csharp_syntax_inits")
+    let did_csharp_syntax_inits=1
+    hi link csharpConditional Conditional
+    hi link csharpError	Error
+    hi link csharpRepeat Repeat
+    hi link csharpBoolean Boolean
+    hi link csharpConst Constant
+    hi link csharpTypedef Typedef
+    hi link csharpOperator Operator
+    hi link csharpDirectional Operator
+    hi link csharpType	Type
+    hi link csharpStatement statement
+    hi link csharpClass Type
+    hi link csharpException Exception
+    hi link csharpScope	Statement
+    hi link csharpBranch Keyword
+    hi link csharpUserLabelRef label
+    hi link csharpTypecast statement
+    hi link csharpStorageClass StorageClass
+    hi link csharpExternal preproc
+    hi link csharpPreproc preproc
+    hi link csharpSpecialError error
+    hi link csharpString string
+    hi link csharpVerbatimString string
+    hi link csharpVerbatimSpec SpecialChar
+    hi link csharpStrPlhldr Operator
+    hi link csharpCharacter	string
+    hi link csharpComment Comment
+    hi link csharpLineComment Comment
+	hi link csharpTodo Todo
+    hi link csharpProperties Operator
+    hi link csharpTypeConvertDecl Operator
+    hi link csharpSystemClass  StorageClass
+    hi link csharpSystemInterface Statement
+    hi link csharpSystemValueType Type
+    hi link csharpSystemDelegate Statement
+    hi link csharpSystemEnum  statement
+    hi csharpProperties gui=italic
+endif
+let b:current_syntax="csharp"
